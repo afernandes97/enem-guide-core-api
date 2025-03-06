@@ -22,13 +22,14 @@ export class JwtService {
     }
   }
 
-  getIdFromToken(token: string): string | null {
+  getIdFromToken(token: string): string {
     try {
       const decoded: JwtPayload = this.nestJwtService.decode(token);
       return decoded.sub;
     } catch (error) {
       console.error('Error decoding token:', error);
-      return null;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return error;
     }
   }
 }
