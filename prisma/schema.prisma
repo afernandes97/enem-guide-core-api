@@ -32,3 +32,13 @@ model UserPreferences {
   favoriteSubject   String
   difficultMaterial String
 }
+
+model UserHistory {
+  id                String   @id @default(uuid()) // ID único para cada usuário
+  userId            String   
+  type              String   
+  message           String 
+  discipline        String 
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
