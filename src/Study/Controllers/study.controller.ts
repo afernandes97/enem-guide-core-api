@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { JwtService } from 'src/Auth/Services/jwt.service';
 import { UserService } from 'src/User/Services/user.service';
 import { GeminiService } from 'src/Gemini/Services/gemini.service';
+import { UserHistoryService } from 'src/UserHistory/Services/history.service';
 
 @Controller('study')
 export class StudyController {
@@ -11,6 +12,7 @@ export class StudyController {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly geminiService: GeminiService,
+    private readonly userHistoryService: UserHistoryService,
   ) {}
 
   @Get('guide/:studyOption')
@@ -52,6 +54,16 @@ export class StudyController {
       `;
 
     const geminiData = await this.geminiService.sendMessage(geminiMessage);
+
+    const historyData = {
+      userId,
+      type: 'study_guide',
+      message: geminiData.message,
+      discipline: studyOption,
+    };
+
+    await this.userHistoryService.createUserHistory(historyData);
+
     return {
       message: 'Get gemini',
       geminiData,

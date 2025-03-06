@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { StudyController } from '../Controllers/study.controller';
+import { HistoryController } from '../Controllers/history.controller';
 import { AuthModule } from 'src/Auth/Modules/auth.module';
 import { PrismaModule } from 'src/Repository/Modules/prisma.module';
 import { UserService } from 'src/User/Services/user.service';
 import { GeminiService } from 'src/Gemini/Services/gemini.service';
-import { UserHistoryService } from 'src/UserHistory/Services/history.service';
+import { UserHistoryService } from '../Services/history.service';
 
 @Module({
   imports: [AuthModule, PrismaModule],
-  controllers: [StudyController],
+  controllers: [HistoryController],
   providers: [UserService, GeminiService, UserHistoryService],
 })
-export class StudyModule {}
+export class HistoryModule {}
