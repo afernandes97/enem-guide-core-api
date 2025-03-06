@@ -1,98 +1,127 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Projeto guia de estudo para o ENEM
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto utiliza o NestJS para criar uma API com autenticação via Google OAuth2, integração com o Prisma ORM para gerenciamento de dados do usuário e JWT para proteger as rotas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologias Utilizadas
 
-## Description
+- **NestJS**: Framework para construir APIs escaláveis e modulares.
+- **Passport**: Middleware para autenticação no NestJS.
+- **passport-google-oauth20**: Estratégia de autenticação com o Google.
+- **JWT**: Para geração e verificação de tokens de autenticação.
+- **Prisma**: ORM para interação com o banco de dados (SQLite neste caso).
+- **SQLite**: Banco de dados utilizado no projeto.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Funcionalidades
 
-## Project setup
+- Autenticação do usuário via Google OAuth2.
+- Armazenamento e atualização dos dados do usuário no banco de dados (Google ID, email, nome, imagem de perfil).
+- Proteção das rotas com JWT para garantir que apenas usuários autenticados possam acessar determinadas informações.
+- Geração de tokens JWT após autenticação para garantir acesso seguro às rotas protegidas.
 
-```bash
-$ pnpm install
-```
+## Estrutura do Projeto
 
-## Compile and run the project
+A estrutura do projeto segue os princípios do NestJS, com os módulos organizados por funcionalidades.
 
-```bash
-# development
-$ pnpm run start
+### Módulos
 
-# watch mode
-$ pnpm run start:dev
+1. **Auth Module**:
+   - Responsável pela autenticação com o Google.
+   - Roteamento para login e callback do Google.
+   - Proteção das rotas com JWT.
+   - Geração de token JWT para autenticação futura.
+2. **Prisma Service**:
 
-# production mode
-$ pnpm run start:prod
-```
+   - Responsável pela interação com o banco de dados (SQLite).
+   - Gerencia a criação, leitura e atualização dos dados do usuário no banco.
 
-## Run tests
+3. **Guards**:
+   - **JwtAuthGuard**: Protege as rotas que exigem autenticação via JWT.
+
+## Como Rodar o Projeto
+
+### 1. Instalar as dependências
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+npm install
 ```
 
-## Deployment
+### 2. Configurar variáveis de ambiente
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+GOOGLE_CLIENT_ID=seu-client-id
+GOOGLE_CLIENT_SECRET=seu-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+APP_JWT_SECRET_KEY=seu-segredo-jwt
+```
+
+### 3. Rodar a aplicação
+
+Para rodar o servidor em modo de desenvolvimento:
 
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+A aplicação estará disponível em `http://localhost:3000`.
 
-## Resources
+## Endpoints
 
-Check out a few resources that may come in handy when working with NestJS:
+### 1. Autenticação com Google
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- **GET** `/auth/google`
 
-## Support
+Inicia o processo de autenticação com o Google.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **GET** `/auth/google/callback`
 
-## Stay in touch
+Recebe o retorno do Google após a autenticação. O usuário será autenticado e um token JWT será retornado.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 2. Perfil do Usuário (Rota Protegida)
 
-## License
+- **GET** `/auth/profile`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Retorna os dados do usuário autenticado. Esta rota é protegida por JWT e requer um token válido para acesso.
+
+### 3. Possíveis Respostas
+
+- **200 OK**: Retorno de sucesso com os dados do usuário ou o token JWT.
+- **401 Unauthorized**: Quando o token JWT não for válido ou não for fornecido.
+
+## Testando a Autenticação
+
+1. Acesse `http://localhost:3000/auth/google` para iniciar o login com o Google.
+2. Após o login, o Google redirecionará para o endpoint `/auth/google/callback`.
+3. O token JWT será gerado e retornado ao usuário.
+
+Para acessar o perfil do usuário, basta incluir o token JWT no cabeçalho da requisição para `/auth/profile`:
+
+```bash
+Authorization: Bearer <seu_token_jwt>
+```
+
+## Como Funciona
+
+1. **Login com Google**: O usuário faz login usando a conta Google. O Google retorna um ID, email, nome e imagem do perfil.
+2. **Criação/Atualização no Banco de Dados**: O sistema verifica se o usuário já existe no banco com base no `googleId`. Se não existir, cria um novo usuário. Caso contrário, atualiza os dados.
+3. **Geração de JWT**: Após a autenticação bem-sucedida, um token JWT é gerado e retornado. Esse token será necessário para acessar rotas protegidas.
+4. **Proteção com JWT**: O token gerado é utilizado para proteger rotas sensíveis, garantindo que apenas usuários autenticados possam acessar suas informações.
+
+## Estrutura do Banco de Dados
+
+O banco de dados utiliza SQLite e a tabela de `User` segue o seguinte modelo:
+
+```prisma
+model User {
+  id            String   @id @default(uuid()) // ID único para cada usuário
+  googleId      String   @unique // ID retornado pelo Google
+  email         String   @unique // Email do usuário
+  name          String?
+  profileImage  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+```
+
+## EM ATUALIZAÇÃO
