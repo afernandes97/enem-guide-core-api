@@ -1,30 +1,48 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Req,
+  UseInterceptors,
+  Inject,
+} from '@nestjs/common';
 import { JwtPassportGuard } from 'src/Modules/Auth/Guards/auth.guard';
 import { Request } from 'express';
 import { JwtService } from 'src/Modules/Auth/Services/jwt.service';
 import { UserService } from 'src/Modules/User/Services/user.service';
 import { GeminiService } from 'src/Shared/Gemini/gemini.service';
 import { UserHistoryService } from 'src/Modules/UserHistory/Services/history.service';
+import { CACHE_MANAGER, CacheKey } from '@nestjs/cache-manager';
+import { MemoryCacheInterceptor } from 'src/Interceptors/memoryCache';
+import { Cache } from 'cache-manager';
 
 @Controller('study')
+@UseInterceptors(MemoryCacheInterceptor)
 export class StudyController {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly geminiService: GeminiService,
     private readonly userHistoryService: UserHistoryService,
-    // @Inject(CACHE_MANAGER) private cacheManager: Cache exemple
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Get('guide/:studyOption')
   @UseGuards(JwtPassportGuard)
+  @CacheKey('study-cache')
   async getChat(@Req() req: Request) {
     const token = req.headers.authorization?.split(' ')[1];
     const { studyOption } = req.params;
-    //FIX: SET CACHING HERE, IF REQ PARAM === POST REQ PARAMS RETURN CACHING exemple nest
-    //await this.cacheManager.set('STUDY_OPTION', { studyOption }, 900000);
 
     const userId = this.jwtService.getIdFromToken(token as string);
+
+    const cacheKey = `study-guide-${userId}-${studyOption}`;
+    const cachedData = await this.cacheManager.get(cacheKey);
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     const userData = await this.userService.findById(userId);
     const userPreferences =
       await this.userService.findUserPreferencesById(userId);
