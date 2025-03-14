@@ -7,6 +7,6 @@ import { GeminiService } from 'src/Shared/Gemini/gemini.service';
 @Module({
   imports: [AuthModule, PrismaModule],
   exports: [GeminiService],
-  providers: [UserService],
+  providers: [UserService, GeminiService],
 })
 export class GeminiModule {}
