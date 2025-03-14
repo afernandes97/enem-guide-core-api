@@ -15,6 +15,8 @@ import { UserHistoryService } from 'src/Modules/UserHistory/Services/history.ser
 import { CACHE_MANAGER, CacheKey } from '@nestjs/cache-manager';
 import { MemoryCacheInterceptor } from 'src/Interceptors/memoryCache';
 import { Cache } from 'cache-manager';
+import { ApiParam, ApiResponse } from '@nestjs/swagger';
+import { StudyGuideResponseDto } from '../Dto/studyResponse.dto';
 
 @Controller('study')
 @UseInterceptors(MemoryCacheInterceptor)
@@ -30,6 +32,12 @@ export class StudyController {
   @Get('guide/:studyOption')
   @UseGuards(JwtPassportGuard)
   @CacheKey('study-cache')
+  @ApiParam({ name: 'studyOption', description: 'Opção de estudo escolhida' })
+  @ApiResponse({
+    status: 200,
+    description: 'Guia de estudo gerado',
+    type: StudyGuideResponseDto,
+  })
   async getChat(@Req() req: Request) {
     const token = req.headers.authorization?.split(' ')[1];
     const { studyOption } = req.params;
