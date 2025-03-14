@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { JwtPassportGuard } from 'src/Auth/Guards/auth.guard';
+import { JwtPassportGuard } from 'src/Modules/Auth/Guards/auth.guard';
 import { Request } from 'express';
-import { JwtService } from 'src/Auth/Services/jwt.service';
-import { UserService } from 'src/User/Services/user.service';
-import { GeminiService } from 'src/Gemini/Services/gemini.service';
-import { UserHistoryService } from 'src/UserHistory/Services/history.service';
+import { JwtService } from 'src/Modules/Auth/Services/jwt.service';
+import { UserService } from 'src/Modules/User/Services/user.service';
+import { GeminiService } from 'src/Shared/Gemini/gemini.service';
+import { UserHistoryService } from 'src/Modules/UserHistory/Services/history.service';
 
 @Controller('study')
 export class StudyController {
@@ -13,6 +13,7 @@ export class StudyController {
     private readonly userService: UserService,
     private readonly geminiService: GeminiService,
     private readonly userHistoryService: UserHistoryService,
+    // @Inject(CACHE_MANAGER) private cacheManager: Cache exemple
   ) {}
 
   @Get('guide/:studyOption')
@@ -20,6 +21,9 @@ export class StudyController {
   async getChat(@Req() req: Request) {
     const token = req.headers.authorization?.split(' ')[1];
     const { studyOption } = req.params;
+    //FIX: SET CACHING HERE, IF REQ PARAM === POST REQ PARAMS RETURN CACHING exemple nest
+    //await this.cacheManager.set('STUDY_OPTION', { studyOption }, 900000);
+
     const userId = this.jwtService.getIdFromToken(token as string);
     const userData = await this.userService.findById(userId);
     const userPreferences =

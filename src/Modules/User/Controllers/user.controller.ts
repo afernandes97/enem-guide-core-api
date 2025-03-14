@@ -7,9 +7,9 @@ import {
   Post,
   ConflictException,
 } from '@nestjs/common';
-import { JwtPassportGuard } from 'src/Auth/Guards/auth.guard';
+import { JwtPassportGuard } from 'src/Modules/Auth/Guards/auth.guard';
 import { Request } from 'express';
-import { JwtService } from 'src/Auth/Services/jwt.service';
+import { JwtService } from 'src/Modules/Auth/Services/jwt.service';
 import { UserService } from '../Services/user.service';
 import { CreateUserPreferencesDto } from '../Dto/user.dto';
 

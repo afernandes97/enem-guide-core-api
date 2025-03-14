@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Req, Post, Body, Get } from '@nestjs/common';
-import { JwtPassportGuard } from 'src/Auth/Guards/auth.guard';
+import { JwtPassportGuard } from 'src/Modules/Auth/Guards/auth.guard';
 import { Request } from 'express';
-import { JwtService } from 'src/Auth/Services/jwt.service';
+import { JwtService } from 'src/Modules/Auth/Services/jwt.service';
 import { CreateUserHistoryDto } from '../Dto/history.dto';
 import { UserHistoryService } from '../Services/history.service';
 
